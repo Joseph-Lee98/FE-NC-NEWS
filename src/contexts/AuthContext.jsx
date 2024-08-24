@@ -60,7 +60,6 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("jwt");
     setUser(null);
     setIsAuthenticated(false);
-    navigate("/login");
   };
 
   const deleteUser = async (username) => {
