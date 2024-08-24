@@ -20,6 +20,33 @@ api.interceptors.request.use(
   }
 );
 
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    // Check if the error response is a 401 with an "Invalid token" message
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      error.response.data.message === "Invalid token"
+    ) {
+      // Clear JWT and user info from local storage
+      localStorage.removeItem("jwt");
+      localStorage.removeItem("user");
+
+      // Redirect to login page
+      const navigate = useNavigate();
+      navigate("/login");
+
+      // Return a rejected promise with the error to stop further execution
+      return Promise.reject(error);
+    }
+
+    return Promise.reject(error);
+  }
+);
+
 // Fetch all topics
 export const fetchTopics = async () => {
   try {
@@ -143,15 +170,13 @@ export const updateCommentById = async (commentId, incVotes) => {
   }
 };
 
-// Register a new user
-export const registerUser = async (userData) => {
+// Fetch a specific user's details
+export const fetchUserDetails = async (username) => {
   try {
-    const response = await api.post("/users", userData);
-    const { user, token } = response.data;
-    localStorage.setItem("jwt", token);
-    return user;
+    const response = await api.get(`/users/${username}`);
+    return response.data;
   } catch (error) {
-    console.error("Error registering user:", error);
+    console.error(`Error fetching details for user ${username}:`, error);
     throw error;
   }
 };
@@ -162,6 +187,7 @@ export const loginUser = async (credentials) => {
     const response = await api.post("/users/login", credentials);
     const { user, token } = response.data;
     localStorage.setItem("jwt", token);
+    localStorage.setItem("user", JSON.stringify(user)); // Store user info
     return user;
   } catch (error) {
     console.error("Error logging in user:", error);
@@ -169,13 +195,16 @@ export const loginUser = async (credentials) => {
   }
 };
 
-// Fetch a specific user's details
-export const fetchUserDetails = async (username) => {
+// Register a new user
+export const registerUser = async (userData) => {
   try {
-    const response = await api.get(`/users/${username}`);
-    return response.data;
+    const response = await api.post("/users", userData);
+    const { user, token } = response.data;
+    localStorage.setItem("jwt", token);
+    localStorage.setItem("user", JSON.stringify(user)); // Store user info
+    return user;
   } catch (error) {
-    console.error(`Error fetching details for user ${username}:`, error);
+    console.error("Error registering user:", error);
     throw error;
   }
 };

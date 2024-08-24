@@ -1,11 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  loginUser,
-  registerUser,
-  fetchUserDetails,
-  deleteUserAccount,
-} from "../utils/api";
+import { loginUser, registerUser, deleteUserAccount } from "../utils/api";
 
 export const AuthContext = createContext();
 
@@ -17,20 +12,40 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const initializeUser = async () => {
-      if (isAuthenticated) {
-        try {
-          const userData = await fetchUserDetails();
-          setUser(userData);
-        } catch (error) {
-          console.error("Failed to fetch user data:", error);
-          logout();
-        }
+    const jwt = localStorage.getItem("jwt");
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+
+    if (jwt && storedUser) {
+      setUser(storedUser);
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+      setUser(null);
+    }
+  }, []);
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const jwt = localStorage.getItem("jwt");
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+
+      if (jwt && storedUser) {
+        setUser(storedUser);
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+        setUser(null);
+        navigate("/login"); // Redirect to login if the JWT is removed or invalid
       }
     };
 
-    initializeUser();
-  }, [isAuthenticated]);
+    window.addEventListener("storage", handleStorageChange);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, [navigate]);
 
   const login = async (credentials) => {
     try {
@@ -58,8 +73,10 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem("jwt");
+    localStorage.removeItem("user");
     setUser(null);
     setIsAuthenticated(false);
+    navigate("/login");
   };
 
   const deleteUser = async (username) => {
