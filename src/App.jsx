@@ -9,6 +9,7 @@ import Login from "./components/login";
 import Register from "./components/register";
 import UserPage from "./components/userpage";
 import AdminPage from "./components/adminpage";
+import "./app.css";
 
 function App() {
   return (
