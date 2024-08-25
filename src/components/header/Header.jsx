@@ -5,12 +5,11 @@ import styles from "./Header.module.css";
 import logo from "/logo.jpeg";
 
 const Header = () => {
-  const { user, isAuthenticated, logout } = useContext(AuthContext);
+  const { user, isAuthenticated, logout, deleteUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
-    navigate("/login");
   };
 
   const handleAccountDelete = () => {
@@ -20,7 +19,6 @@ const Header = () => {
       )
     ) {
       deleteUser(user.username);
-      navigate("/register");
     }
   };
 
