@@ -80,9 +80,14 @@ export const AuthProvider = ({ children }) => {
   };
 
   const deleteUser = async (username) => {
+    console.log("got into the deleteUser function in AuthContext");
     try {
       await deleteUserAccount(username);
-      logout();
+      localStorage.removeItem("jwt");
+      localStorage.removeItem("user");
+      setUser(null);
+      setIsAuthenticated(false);
+      navigate("/register");
     } catch (error) {
       console.error("Failed to delete user:", error);
       throw error;
