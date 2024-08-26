@@ -18,7 +18,6 @@ const RegisterPage = () => {
       const userData = { username, name, password, avatar_url: avatarUrl };
       console.log("object sent when invoking register: ", userData);
       await register(userData);
-      navigate("/");
     } catch (err) {
       setError("Registration failed. Please check your details and try again.");
     }

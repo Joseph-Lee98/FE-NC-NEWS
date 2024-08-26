@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
+
 import {
   fetchArticles,
   fetchTopics,
@@ -13,27 +14,17 @@ export const ArticlesContext = createContext();
 export const ArticlesProvider = ({ children }) => {
   const [articles, setArticles] = useState([]);
   const [topics, setTopics] = useState([]);
-
-  const [articlesLoading, setArticlesLoading] = useState(true);
-  const [articlesError, setArticlesError] = useState(null);
-
-  const [topicsLoading, setTopicsLoading] = useState(true);
-  const [topicsError, setTopicsError] = useState(null);
-
   const [filters, setFilters] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const loadTopics = async () => {
-      setTopicsLoading(true);
-      setTopicsError(null);
       try {
         const topicsData = await fetchTopics();
         setTopics(topicsData);
       } catch (error) {
         console.error("Failed to fetch topics:", error);
-        setTopicsError("Failed to fetch topics.");
-      } finally {
-        setTopicsLoading(false);
+        throw error;
       }
     };
 
@@ -42,16 +33,15 @@ export const ArticlesProvider = ({ children }) => {
 
   useEffect(() => {
     const loadArticles = async () => {
-      setArticlesLoading(true);
-      setArticlesError(null);
       try {
+        setIsLoading(true);
         const articlesData = await fetchArticles(filters);
         setArticles(articlesData);
       } catch (error) {
         console.error("Failed to fetch articles:", error);
-        setArticlesError("Failed to fetch articles.");
+        throw error;
       } finally {
-        setArticlesLoading(false);
+        setIsLoading(false);
       }
     };
 
@@ -59,16 +49,15 @@ export const ArticlesProvider = ({ children }) => {
   }, [filters]);
 
   const refreshArticles = async () => {
-    setArticlesLoading(true);
-    setArticlesError(null);
     try {
+      setIsLoading(true);
       const articlesData = await fetchArticles(filters);
       setArticles(articlesData);
     } catch (error) {
       console.error("Failed to refresh articles:", error);
-      setArticlesError("Failed to refresh articles.");
+      throw error;
     } finally {
-      setArticlesLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -81,11 +70,20 @@ export const ArticlesProvider = ({ children }) => {
 
   const addArticle = async (articleData) => {
     try {
+      if (articleData.article_img_url === "") {
+        delete articleData.article_img_url;
+      }
       const newArticle = await postArticle(articleData);
-      setArticles((prevArticles) => [newArticle, ...prevArticles]);
+
+      const meetsFilterConditions = (article) => {
+        return !filters.topic || article.topic === filters.topic;
+      };
+
+      if (meetsFilterConditions(newArticle)) {
+        setArticles((prevArticles) => [newArticle, ...prevArticles]);
+      }
     } catch (error) {
       console.error("Failed to add article:", error);
-      setArticlesError("Failed to add article.");
       throw error;
     }
   };
@@ -100,7 +98,6 @@ export const ArticlesProvider = ({ children }) => {
       );
     } catch (error) {
       console.error("Failed to update article:", error);
-      setArticlesError("Failed to update article.");
       throw error;
     }
   };
@@ -113,7 +110,6 @@ export const ArticlesProvider = ({ children }) => {
       );
     } catch (error) {
       console.error("Failed to delete article:", error);
-      setArticlesError("Failed to delete article.");
       throw error;
     }
   };
@@ -131,7 +127,6 @@ export const ArticlesProvider = ({ children }) => {
       );
     } catch (error) {
       console.error("Failed to add comment:", error);
-      setArticlesError("Failed to add comment.");
       throw error;
     }
   };
@@ -142,10 +137,7 @@ export const ArticlesProvider = ({ children }) => {
         articles,
         topics,
         filters,
-        articlesLoading,
-        articlesError,
-        topicsLoading,
-        topicsError,
+        isLoading,
         updateFilters,
         addArticle,
         updateArticle,

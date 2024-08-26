@@ -15,7 +15,6 @@ const LoginPage = () => {
     try {
       console.log("object sent when invoking login: ", { username, password });
       await login({ username, password });
-      navigate("/");
     } catch (err) {
       setError("Login failed. Please check your credentials and try again.");
     }
