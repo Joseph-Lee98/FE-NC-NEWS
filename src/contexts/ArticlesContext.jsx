@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import {
   fetchArticles,
+  fetchArticleById,
   fetchTopics,
   postArticle,
   updateArticleById,
@@ -15,6 +16,8 @@ export const ArticlesContext = createContext();
 
 export const ArticlesProvider = ({ children }) => {
   const [articles, setArticles] = useState([]);
+  const [article, setArticle] = useState({});
+  const [articleId, setArticleId] = useState(null);
   const [topics, setTopics] = useState([]);
   const [filters, setFilters] = useState({
     sort_by: "created_at",
@@ -22,11 +25,33 @@ export const ArticlesProvider = ({ children }) => {
     topic: "",
   });
   const [isLoadingArticles, setIsLoadingArticles] = useState(true);
+  const [isLoadingArticle, setIsLoadingArticle] = useState(true);
   const [isLoadingTopics, setIsLoadingTopics] = useState(true);
   const [errorFetchingArticles, setErrorFetchingArticles] = useState("");
+  const [errorFetchingArticle, setErrorFetchingArticle] = useState("");
   const [errorFetchingTopics, setErrorFetchingTopics] = useState("");
 
   const { isAuthenticated } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (!articleId) return;
+    const loadArticle = async () => {
+      try {
+        setErrorFetchingArticle("");
+        setIsLoadingArticle(true);
+        const fetchedArticle = await fetchArticleById(articleId);
+        setArticle(fetchedArticle);
+      } catch (error) {
+        console.error("Error loading article:", error);
+        setErrorFetchingArticle(
+          "Failed to load article, please try refreshing the page"
+        );
+      } finally {
+        setIsLoadingArticle(false);
+      }
+    };
+    loadArticle();
+  }, [articleId]);
 
   useEffect(() => {
     const loadTopics = async () => {
@@ -177,6 +202,7 @@ export const ArticlesProvider = ({ children }) => {
         topics,
         filters,
         isLoadingArticles,
+        isLoadingArticle,
         isLoadingTopics,
         updateFilters,
         addArticle,
@@ -187,7 +213,10 @@ export const ArticlesProvider = ({ children }) => {
         addComment,
         deleteComment,
         errorFetchingArticles,
+        errorFetchingArticle,
         errorFetchingTopics,
+        setArticleId,
+        article,
       }}
     >
       {children}

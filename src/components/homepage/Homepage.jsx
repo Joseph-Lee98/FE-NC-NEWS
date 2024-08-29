@@ -1,11 +1,11 @@
 import React, { useContext, useState, useEffect } from "react";
 import { ArticlesContext } from "../../contexts/ArticlesContext";
 import { AuthContext } from "../../contexts/AuthContext";
-import ArticleCard from "../articleCard/articleCard";
+import ArticleCard from "../articlecard/Articlecard";
 import styles from "./Homepage.module.css";
 import { v4 as uuidv4 } from "uuid";
 
-const Homepage = () => {
+const HomePage = () => {
   const {
     articles,
     topics,
@@ -162,7 +162,7 @@ const Homepage = () => {
           </select>
         </div>
       ) : (
-        <p>{isLoadingTopics}</p>
+        <p>Loading topics...</p>
       )}
 
       {isAuthenticated && !isLoadingTopics && !isLoadingArticles && (
@@ -250,4 +250,4 @@ const Homepage = () => {
   );
 };
 
-export default Homepage;
+export default HomePage;

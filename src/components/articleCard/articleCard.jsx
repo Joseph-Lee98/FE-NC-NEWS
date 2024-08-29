@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "./ArticleCard.module.css";
+import styles from "./Articlecard.module.css";
 
 const ArticleCard = ({ article }) => {
   const navigate = useNavigate();
