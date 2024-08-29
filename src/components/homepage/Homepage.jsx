@@ -1,14 +1,26 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { ArticlesContext } from "../../contexts/ArticlesContext";
 import { AuthContext } from "../../contexts/AuthContext";
 import ArticleCard from "../articleCard/articleCard";
 import styles from "./Homepage.module.css";
+import { v4 as uuidv4 } from "uuid";
 
 const Homepage = () => {
-  const { articles, topics, isLoading, addArticle, updateFilters, filters } =
-    useContext(ArticlesContext);
+  const {
+    articles,
+    topics,
+    isLoadingArticles,
+    isLoadingTopics,
+    addArticle,
+    updateFilters,
+    filters,
+    setArticles,
+    refreshArticles,
+    errorFetchingArticles,
+    errorFetchingTopics,
+  } = useContext(ArticlesContext);
 
-  const { isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated, user } = useContext(AuthContext);
 
   const [newArticle, setNewArticle] = useState({
     title: "",
@@ -16,23 +28,52 @@ const Homepage = () => {
     topic: "",
     article_img_url: "", // Optional field for image URL
   });
-  const [error, setError] = useState("");
+  const [errorPosting, setErrorPosting] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [isPosting, setIsPosting] = useState("");
+
+  useEffect(() => {
+    if (successMessage) {
+      setSuccessMessage("");
+    }
+  }, [filters]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewArticle((prevArticle) => ({
       ...prevArticle,
-      [name]: value,
+      [name]: value || "", // Ensure that value is never undefined
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    setErrorPosting("");
     setSuccessMessage("");
+    setIsPosting("Posting comment...");
+    const tempId = uuidv4();
+    const placeholderArticle = {
+      ...newArticle,
+      article_id: tempId,
+      author: user.username,
+      created_at: new Date().toISOString(),
+      votes: 0,
+      comment_count: 0,
+      isPlaceholder: true,
+    };
+    const articlePendingPosting = {
+      ...newArticle,
+      article_img_url:
+        newArticle.article_img_url !== ""
+          ? newArticle.article_img_url
+          : undefined,
+    };
+    const copyArticles = [...articles];
+    if (placeholderArticle.topic === filters.topic || !filters.topic)
+      setArticles((prevArticles) => [placeholderArticle, ...prevArticles]);
+
     try {
-      await addArticle(newArticle);
+      const postedArticle = await addArticle(articlePendingPosting);
       setSuccessMessage("Article successfully created!");
       setNewArticle({
         title: "",
@@ -40,8 +81,18 @@ const Homepage = () => {
         topic: "",
         article_img_url: "",
       });
+      if (postedArticle.topic === filters.topic || !filters.topic) {
+        setArticles((prevArticles) =>
+          prevArticles.map((article) =>
+            article.isPlaceholder ? postedArticle : article
+          )
+        );
+      }
     } catch (error) {
-      setError("Failed to create article. Please try again.");
+      setErrorPosting("Failed to create article. Please try again.");
+      setArticles(copyArticles);
+    } finally {
+      setIsPosting("");
     }
   };
 
@@ -53,51 +104,71 @@ const Homepage = () => {
     if (name === "sort_by" && !filters.order_by) {
       newFilters.order_by = "desc"; // Set default order if not already set
     }
-    setSuccessMessage("");
     updateFilters(newFilters);
   };
 
+  if (errorFetchingArticles && errorFetchingTopics) {
+    return (
+      <>
+        <p className={styles.error}>{errorFetchingTopics}</p>
+        <p className={styles.error}>{errorFetchingArticles}</p>
+      </>
+    );
+  }
+
+  if (errorFetchingTopics) {
+    return <p className={styles.error}>{errorFetchingTopics}</p>;
+  }
+
+  if (errorFetchingArticles) {
+    return <p className={styles.error}>{errorFetchingArticles}</p>;
+  }
+
   return (
     <div className={styles.homepageContainer}>
-      <div className={styles.filterContainer}>
-        <select
-          name="topic"
-          value={filters.topic || ""}
-          onChange={handleFilterChange}
-          className={styles.filterSelect}
-        >
-          <option value="">Select Topic</option>
-          {topics.map((topic) => (
-            <option key={topic.slug} value={topic.slug}>
-              {topic.slug}
-            </option>
-          ))}
-        </select>
-        <select
-          name="sort_by"
-          value={filters.sort_by || "created_at"}
-          onChange={handleFilterChange}
-          className={styles.filterSelect}
-        >
-          <option value="created_at">Date</option>
-          <option value="votes">Votes</option>
-          <option value="comment_count">Comments</option>
-        </select>
-        <select
-          name="order_by"
-          value={filters.order_by || "desc"}
-          onChange={handleFilterChange}
-          className={styles.filterSelect}
-        >
-          <option value="desc">Descending</option>
-          <option value="asc">Ascending</option>
-        </select>
-      </div>
+      {!isLoadingTopics ? (
+        <div className={styles.filterContainer}>
+          <select
+            name="topic"
+            value={filters.topic || ""}
+            onChange={handleFilterChange}
+            className={styles.filterSelect}
+          >
+            <option value="">Select Topic</option>
+            {topics.map((topic) => (
+              <option key={topic.slug} value={topic.slug}>
+                {topic.slug}
+              </option>
+            ))}
+          </select>
+          <select
+            name="sort_by"
+            value={filters.sort_by || "created_at"}
+            onChange={handleFilterChange}
+            className={styles.filterSelect}
+          >
+            <option value="created_at">Date</option>
+            <option value="votes">Votes</option>
+            <option value="comment_count">Comments</option>
+          </select>
+          <select
+            name="order_by"
+            value={filters.order_by || "desc"}
+            onChange={handleFilterChange}
+            className={styles.filterSelect}
+          >
+            <option value="desc">Descending</option>
+            <option value="asc">Ascending</option>
+          </select>
+        </div>
+      ) : (
+        <p>{isLoadingTopics}</p>
+      )}
 
-      {isAuthenticated && (
+      {isAuthenticated && !isLoadingTopics && !isLoadingArticles && (
         <div className={styles.newArticleFormContainer}>
           <h2>Create a New Article</h2>
-          {error && <p className={styles.error}>{error}</p>}
+          {errorPosting && <p className={styles.error}>{errorPosting}</p>}
           {successMessage && <p className={styles.success}>{successMessage}</p>}
           <form onSubmit={handleSubmit} className={styles.form}>
             <label htmlFor="title" className={styles.label}>
@@ -156,22 +227,25 @@ const Homepage = () => {
               className={styles.input}
             />
 
-            <button type="submit" className={styles.button}>
-              Create Article
+            <button
+              type="submit"
+              className={styles.button}
+              disabled={!!isPosting} // Disable button if isPosting is truthy
+            >
+              {isPosting ? "Creating Article..." : "Create Article"}
             </button>
           </form>
         </div>
       )}
-
-      <div className={styles.articlesContainer}>
-        {isLoading ? (
-          <p>Loading articles...</p>
-        ) : (
-          articles.map((article) => (
+      {!isLoadingArticles ? (
+        <div className={styles.articlesContainer}>
+          {articles.map((article) => (
             <ArticleCard key={article.article_id} article={article} />
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <p>Loading articles...</p>
+      )}
     </div>
   );
 };

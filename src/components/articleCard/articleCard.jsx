@@ -6,16 +6,23 @@ const ArticleCard = ({ article }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/article/${article.article_id}`);
+    if (!article.isPlaceholder) navigate(`/article/${article.article_id}`);
   };
 
   return (
-    <div className={styles.articleCard} onClick={handleClick}>
-      <img
-        src={article.article_img_url}
-        alt={article.title}
-        className={styles.articleImage}
-      />
+    <div
+      className={`${styles.articleCard} ${
+        article.isPlaceholder ? styles.disabledArticleCard : ""
+      }`}
+      onClick={handleClick}
+    >
+      {article.article_img_url && (
+        <img
+          src={article.article_img_url}
+          alt={article.title}
+          className={styles.articleImage}
+        />
+      )}
       <div className={styles.articleContent}>
         <h3>{article.title}</h3>
         <p>Author: {article.author}</p>

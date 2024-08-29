@@ -1,5 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
-
+import React, { createContext, useState, useEffect, useContext } from "react";
 import {
   fetchArticles,
   fetchTopics,
@@ -7,24 +6,42 @@ import {
   updateArticleById,
   deleteArticleById,
   postCommentByArticleId,
+  fetchCommentsByArticleId,
+  deleteCommentById,
 } from "../utils/api";
+import { AuthContext } from "./AuthContext";
 
 export const ArticlesContext = createContext();
 
 export const ArticlesProvider = ({ children }) => {
   const [articles, setArticles] = useState([]);
   const [topics, setTopics] = useState([]);
-  const [filters, setFilters] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [filters, setFilters] = useState({
+    sort_by: "created_at",
+    order_by: "desc",
+    topic: "",
+  });
+  const [isLoadingArticles, setIsLoadingArticles] = useState(true);
+  const [isLoadingTopics, setIsLoadingTopics] = useState(true);
+  const [errorFetchingArticles, setErrorFetchingArticles] = useState("");
+  const [errorFetchingTopics, setErrorFetchingTopics] = useState("");
+
+  const { isAuthenticated } = useContext(AuthContext);
 
   useEffect(() => {
     const loadTopics = async () => {
       try {
+        setErrorFetchingTopics("");
+        setIsLoadingTopics(true);
         const topicsData = await fetchTopics();
         setTopics(topicsData);
       } catch (error) {
         console.error("Failed to fetch topics:", error);
-        throw error;
+        setErrorFetchingTopics(
+          "Failed to load topics, please try refreshing the page"
+        );
+      } finally {
+        setIsLoadingTopics(false);
       }
     };
 
@@ -34,19 +51,30 @@ export const ArticlesProvider = ({ children }) => {
   useEffect(() => {
     const loadArticles = async () => {
       try {
-        setIsLoading(true);
+        setErrorFetchingArticles("");
+        setIsLoadingArticles(true);
         const articlesData = await fetchArticles(filters);
         setArticles(articlesData);
       } catch (error) {
         console.error("Failed to fetch articles:", error);
-        throw error;
+        setErrorFetchingArticles(
+          "Failed to load articles, please try refreshing the page"
+        );
       } finally {
-        setIsLoading(false);
+        setIsLoadingArticles(false);
       }
     };
 
     loadArticles();
   }, [filters]);
+
+  useEffect(() => {
+    setFilters({
+      sort_by: "created_at",
+      order_by: "desc",
+      topic: "",
+    });
+  }, [isAuthenticated]);
 
   const refreshArticles = async () => {
     try {
@@ -70,18 +98,8 @@ export const ArticlesProvider = ({ children }) => {
 
   const addArticle = async (articleData) => {
     try {
-      if (articleData.article_img_url === "") {
-        delete articleData.article_img_url;
-      }
-      const newArticle = await postArticle(articleData);
-
-      const meetsFilterConditions = (article) => {
-        return !filters.topic || article.topic === filters.topic;
-      };
-
-      if (meetsFilterConditions(newArticle)) {
-        setArticles((prevArticles) => [newArticle, ...prevArticles]);
-      }
+      const response = await postArticle(articleData);
+      return response; // This should return the full article data with the correct article_id from the backend
     } catch (error) {
       console.error("Failed to add article:", error);
       throw error;
@@ -102,6 +120,16 @@ export const ArticlesProvider = ({ children }) => {
     }
   };
 
+  const updateArticleCommentCount = (articleId, incCount) => {
+    setArticles((prevArticles) =>
+      prevArticles.map((article) =>
+        article.article_id === articleId
+          ? { ...article, comment_count: article.comment_count + incCount }
+          : article
+      )
+    );
+  };
+
   const removeArticle = async (articleId) => {
     try {
       await deleteArticleById(articleId);
@@ -116,7 +144,7 @@ export const ArticlesProvider = ({ children }) => {
 
   const addComment = async (articleId, commentData) => {
     try {
-      await postCommentByArticleId(articleId, commentData);
+      const newComment = await postCommentByArticleId(articleId, commentData);
 
       setArticles((prevArticles) =>
         prevArticles.map((article) =>
@@ -125,9 +153,19 @@ export const ArticlesProvider = ({ children }) => {
             : article
         )
       );
+      return newComment;
     } catch (error) {
       console.error("Failed to add comment:", error);
       throw error;
+    }
+  };
+
+  const deleteComment = async (commentId) => {
+    try {
+      await deleteCommentById(commentId);
+    } catch (error) {
+      console.error("Failed to delete comment:", error);
+      throw error; // Rethrow the error to handle it in the CommentCard
     }
   };
 
@@ -135,15 +173,21 @@ export const ArticlesProvider = ({ children }) => {
     <ArticlesContext.Provider
       value={{
         articles,
+        setArticles,
         topics,
         filters,
-        isLoading,
+        isLoadingArticles,
+        isLoadingTopics,
         updateFilters,
         addArticle,
         updateArticle,
+        updateArticleCommentCount,
         removeArticle,
         refreshArticles,
         addComment,
+        deleteComment,
+        errorFetchingArticles,
+        errorFetchingTopics,
       }}
     >
       {children}

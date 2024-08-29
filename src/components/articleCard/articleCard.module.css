@@ -12,6 +12,12 @@
   transform: scale(1.02);
 }
 
+.disabledArticleCard {
+  cursor: not-allowed;
+  opacity: 0.6; /* Reduce opacity to signal that the card is disabled */
+  transform: none; /* Disable hover effect */
+}
+
 .articleImage {
   width: 100%;
   height: 150px;
