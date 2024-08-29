@@ -107,144 +107,139 @@ const HomePage = () => {
     updateFilters(newFilters);
   };
 
-  if (errorFetchingArticles && errorFetchingTopics) {
-    return (
-      <>
-        <p className={styles.error}>{errorFetchingTopics}</p>
-        <p className={styles.error}>{errorFetchingArticles}</p>
-      </>
-    );
-  }
-
-  if (errorFetchingTopics) {
-    return <p className={styles.error}>{errorFetchingTopics}</p>;
-  }
-
-  if (errorFetchingArticles) {
-    return <p className={styles.error}>{errorFetchingArticles}</p>;
-  }
-
   return (
     <div className={styles.homepageContainer}>
-      {!isLoadingTopics ? (
-        <div className={styles.filterContainer}>
-          <select
-            name="topic"
-            value={filters.topic || ""}
-            onChange={handleFilterChange}
-            className={styles.filterSelect}
-          >
-            <option value="">Select Topic</option>
-            {topics.map((topic) => (
-              <option key={topic.slug} value={topic.slug}>
-                {topic.slug}
-              </option>
-            ))}
-          </select>
-          <select
-            name="sort_by"
-            value={filters.sort_by || "created_at"}
-            onChange={handleFilterChange}
-            className={styles.filterSelect}
-          >
-            <option value="created_at">Date</option>
-            <option value="votes">Votes</option>
-            <option value="comment_count">Comments</option>
-          </select>
-          <select
-            name="order_by"
-            value={filters.order_by || "desc"}
-            onChange={handleFilterChange}
-            className={styles.filterSelect}
-          >
-            <option value="desc">Descending</option>
-            <option value="asc">Ascending</option>
-          </select>
-        </div>
-      ) : (
-        <p>Loading topics...</p>
+      {errorFetchingArticles && (
+        <p className={styles.error}>{errorFetchingArticles}</p>
       )}
+      {errorFetchingTopics && (
+        <p className={styles.error}>{errorFetchingTopics}</p>
+      )}
+      {!errorFetchingArticles && !errorFetchingTopics && (
+        <>
+          {!isLoadingTopics ? (
+            <div className={styles.filterContainer}>
+              <select
+                name="topic"
+                value={filters.topic || ""}
+                onChange={handleFilterChange}
+                className={styles.filterSelect}
+              >
+                <option value="">Select Topic</option>
+                {topics.map((topic) => (
+                  <option key={topic.slug} value={topic.slug}>
+                    {topic.slug}
+                  </option>
+                ))}
+              </select>
+              <select
+                name="sort_by"
+                value={filters.sort_by || "created_at"}
+                onChange={handleFilterChange}
+                className={styles.filterSelect}
+              >
+                <option value="created_at">Date</option>
+                <option value="votes">Votes</option>
+                <option value="comment_count">Comments</option>
+              </select>
+              <select
+                name="order_by"
+                value={filters.order_by || "desc"}
+                onChange={handleFilterChange}
+                className={styles.filterSelect}
+              >
+                <option value="desc">Descending</option>
+                <option value="asc">Ascending</option>
+              </select>
+            </div>
+          ) : (
+            <p>Loading topics...</p>
+          )}
 
-      {isAuthenticated && !isLoadingTopics && !isLoadingArticles && (
-        <div className={styles.newArticleFormContainer}>
-          <h2>Create a New Article</h2>
-          {errorPosting && <p className={styles.error}>{errorPosting}</p>}
-          {successMessage && <p className={styles.success}>{successMessage}</p>}
-          <form onSubmit={handleSubmit} className={styles.form}>
-            <label htmlFor="title" className={styles.label}>
-              Title
-            </label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              value={newArticle.title}
-              onChange={handleInputChange}
-              className={styles.input}
-              required
-            />
+          {isAuthenticated && !isLoadingTopics && !isLoadingArticles && (
+            <div className={styles.newArticleFormContainer}>
+              <h2>Create a New Article</h2>
+              {errorPosting && <p className={styles.error}>{errorPosting}</p>}
+              {successMessage && (
+                <p className={styles.success}>{successMessage}</p>
+              )}
+              <form onSubmit={handleSubmit} className={styles.form}>
+                <label htmlFor="title" className={styles.label}>
+                  Title
+                </label>
+                <input
+                  type="text"
+                  id="title"
+                  name="title"
+                  value={newArticle.title}
+                  onChange={handleInputChange}
+                  className={styles.input}
+                  required
+                />
 
-            <label htmlFor="body" className={styles.label}>
-              Body
-            </label>
-            <textarea
-              id="body"
-              name="body"
-              value={newArticle.body}
-              onChange={handleInputChange}
-              className={styles.textarea}
-              required
-            />
+                <label htmlFor="body" className={styles.label}>
+                  Body
+                </label>
+                <textarea
+                  id="body"
+                  name="body"
+                  value={newArticle.body}
+                  onChange={handleInputChange}
+                  className={styles.textarea}
+                  required
+                />
 
-            <label htmlFor="topic" className={styles.label}>
-              Topic
-            </label>
-            <select
-              id="topic"
-              name="topic"
-              value={newArticle.topic}
-              onChange={handleInputChange}
-              className={styles.select}
-              required
-            >
-              <option value="">Select Topic</option>
-              {topics.map((topic) => (
-                <option key={topic.slug} value={topic.slug}>
-                  {topic.slug}
-                </option>
+                <label htmlFor="topic" className={styles.label}>
+                  Topic
+                </label>
+                <select
+                  id="topic"
+                  name="topic"
+                  value={newArticle.topic}
+                  onChange={handleInputChange}
+                  className={styles.select}
+                  required
+                >
+                  <option value="">Select Topic</option>
+                  {topics.map((topic) => (
+                    <option key={topic.slug} value={topic.slug}>
+                      {topic.slug}
+                    </option>
+                  ))}
+                </select>
+
+                <label htmlFor="article_img_url" className={styles.label}>
+                  Image URL (Optional)
+                </label>
+                <input
+                  type="text"
+                  id="article_img_url"
+                  name="article_img_url"
+                  value={newArticle.article_img_url}
+                  onChange={handleInputChange}
+                  className={styles.input}
+                />
+
+                <button
+                  type="submit"
+                  className={styles.button}
+                  disabled={!!isPosting} // Disable button if isPosting is truthy
+                >
+                  {isPosting ? "Creating Article..." : "Create Article"}
+                </button>
+              </form>
+            </div>
+          )}
+          {!isLoadingArticles ? (
+            <div className={styles.articlesContainer}>
+              {articles.map((article) => (
+                <ArticleCard key={article.article_id} article={article} />
               ))}
-            </select>
-
-            <label htmlFor="article_img_url" className={styles.label}>
-              Image URL (Optional)
-            </label>
-            <input
-              type="text"
-              id="article_img_url"
-              name="article_img_url"
-              value={newArticle.article_img_url}
-              onChange={handleInputChange}
-              className={styles.input}
-            />
-
-            <button
-              type="submit"
-              className={styles.button}
-              disabled={!!isPosting} // Disable button if isPosting is truthy
-            >
-              {isPosting ? "Creating Article..." : "Create Article"}
-            </button>
-          </form>
-        </div>
-      )}
-      {!isLoadingArticles ? (
-        <div className={styles.articlesContainer}>
-          {articles.map((article) => (
-            <ArticleCard key={article.article_id} article={article} />
-          ))}
-        </div>
-      ) : (
-        <p>Loading articles...</p>
+            </div>
+          ) : (
+            <p>Loading articles...</p>
+          )}
+        </>
       )}
     </div>
   );
