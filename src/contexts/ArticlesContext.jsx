@@ -133,12 +133,7 @@ export const ArticlesProvider = ({ children }) => {
 
   const updateArticle = async (articleId, incVotes) => {
     try {
-      const updatedArticle = await updateArticleById(articleId, incVotes);
-      setArticles((prevArticles) =>
-        prevArticles.map((article) =>
-          article.article_id === articleId ? updatedArticle : article
-        )
-      );
+      await updateArticleById(articleId, incVotes);
     } catch (error) {
       console.error("Failed to update article:", error);
       throw error;
@@ -217,6 +212,7 @@ export const ArticlesProvider = ({ children }) => {
         errorFetchingTopics,
         setArticleId,
         article,
+        setArticle,
       }}
     >
       {children}

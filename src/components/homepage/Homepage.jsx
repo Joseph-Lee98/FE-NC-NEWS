@@ -30,7 +30,7 @@ const HomePage = () => {
   });
   const [errorPosting, setErrorPosting] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [isPosting, setIsPosting] = useState("");
+  const [isPosting, setIsPosting] = useState(false);
 
   useEffect(() => {
     if (successMessage) {

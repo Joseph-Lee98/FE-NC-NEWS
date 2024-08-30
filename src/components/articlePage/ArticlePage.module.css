@@ -38,3 +38,24 @@
   justify-content: space-between;
   margin-top: 10px;
 }
+
+.votingContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Align icons to the left */
+  gap: 10px; /* Space between the upvote and downvote icons */
+  margin-top: 20px; /* Add some space above the voting container */
+}
+
+.voteIcon {
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.upvoted {
+  color: blue; /* Change to blue when upvoted */
+}
+
+.downvoted {
+  color: red; /* Change to red when downvoted */
+}
