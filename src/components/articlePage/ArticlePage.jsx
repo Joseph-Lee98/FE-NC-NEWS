@@ -22,9 +22,10 @@ const ArticlePage = () => {
       {errorFetchingArticle && (
         <p className={styles.error}>{errorFetchingArticle}</p>
       )}
-      {!errorFetchingArticle && (
-        <>
-          {!isLoadingArticle ? (
+      {isLoadingArticle && <p>Loading article...</p>}
+      {!errorFetchingArticle &&
+        !isLoadingArticle(
+          <>
             <div className={styles.articleContent}>
               <img
                 src={article.article_img_url}
@@ -39,11 +40,8 @@ const ArticlePage = () => {
                 <span>Comments: {article.comment_count}</span>
               </div>
             </div>
-          ) : (
-            <p>Loading article...</p>
-          )}
-        </>
-      )}
+          </>
+        )}
     </div>
   );
 };
