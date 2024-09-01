@@ -153,9 +153,6 @@ export const ArticlesProvider = ({ children }) => {
   const removeArticle = async (articleId) => {
     try {
       await deleteArticleById(articleId);
-      setArticles((prevArticles) =>
-        prevArticles.filter((article) => article.article_id !== articleId)
-      );
     } catch (error) {
       console.error("Failed to delete article:", error);
       throw error;

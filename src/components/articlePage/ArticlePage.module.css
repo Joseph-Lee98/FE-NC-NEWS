@@ -42,9 +42,7 @@
 .votingContainer {
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Align icons to the left */
   gap: 10px; /* Space between the upvote and downvote icons */
-  margin-top: 20px; /* Add some space above the voting container */
 }
 
 .voteIcon {
@@ -58,4 +56,25 @@
 
 .downvoted {
   color: red; /* Change to red when downvoted */
+}
+
+.actionContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Space between vote icons and delete button */
+  margin-top: 20px;
+}
+
+.deleteButton {
+  background-color: red;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.deleteButton:hover {
+  background-color: darkred;
 }

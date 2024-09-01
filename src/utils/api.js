@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const api = axios.create({
   baseURL: "https://be-nc-news-q4om.onrender.com/api",

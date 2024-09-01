@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { ArticlesContext } from "../../contexts/ArticlesContext";
 import styles from "./ArticlePage.module.css";
 import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
@@ -7,6 +7,7 @@ import ThumbDownAltOutlinedIcon from "@mui/icons-material/ThumbDownAltOutlined";
 import { AuthContext } from "../../contexts/AuthContext";
 
 const ArticlePage = () => {
+  const navigate = useNavigate();
   const { article_id } = useParams();
   const article_idNumber = Number(article_id);
   const {
@@ -18,14 +19,17 @@ const ArticlePage = () => {
     errorFetchingArticle,
     setArticleId,
     updateArticle,
+    removeArticle,
   } = useContext(ArticlesContext);
 
-  const { isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated, user } = useContext(AuthContext);
 
   const [errorVoting, setErrorVoting] = useState("");
   const [isVoting, setIsVoting] = useState(false);
   const [upvoted, setUpvoted] = useState(false);
   const [downvoted, setDownvoted] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [errorDeletingArticle, setErrorDeletingArticle] = useState("");
 
   useEffect(() => {
     setArticleId(article_id);
@@ -133,6 +137,34 @@ const ArticlePage = () => {
     }
   };
 
+  const handleDelete = async () => {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this article? This action cannot be undone."
+      )
+    ) {
+      setErrorDeletingArticle("");
+      setIsDeleting(true);
+      const updatedArticles = articles.filter(
+        (article) => article.article_id !== article_idNumber
+      );
+      try {
+        await removeArticle(article_idNumber);
+        setArticle({});
+        setArticles(updatedArticles);
+        navigate("/");
+      } catch (error) {
+        setErrorDeletingArticle("Failed to delete article. Please try again.");
+      } finally {
+        setIsDeleting(false);
+      }
+    }
+  };
+
+  const canDelete =
+    (user?.username && article.author && user?.username === article.author) ||
+    user?.role === "admin";
+
   return (
     <div className={styles.articlePageContainer}>
       {errorFetchingArticle && (
@@ -155,23 +187,36 @@ const ArticlePage = () => {
               <span>Comments: {article.comment_count}</span>
             </div>
             {isAuthenticated && (
-              <div className={styles.votingContainer}>
-                <ThumbUpAltOutlinedIcon
-                  onClick={handleUpvote}
-                  className={`${styles.voteIcon} ${
-                    upvoted ? styles.upvoted : ""
-                  }`}
-                />
-                <ThumbDownAltOutlinedIcon
-                  onClick={handleDownvote}
-                  className={`${styles.voteIcon} ${
-                    downvoted ? styles.downvoted : ""
-                  }`}
-                />
+              <div className="styles.actionContainer">
+                <div className={styles.votingContainer}>
+                  <ThumbUpAltOutlinedIcon
+                    onClick={handleUpvote}
+                    className={`${styles.voteIcon} ${
+                      upvoted ? styles.upvoted : ""
+                    }`}
+                  />
+                  <ThumbDownAltOutlinedIcon
+                    onClick={handleDownvote}
+                    className={`${styles.voteIcon} ${
+                      downvoted ? styles.downvoted : ""
+                    }`}
+                  />
+                </div>
+                {canDelete && (
+                  <button
+                    onClick={handleDelete}
+                    className={styles.deleteButton}
+                  >
+                    {isDeleting ? "Deleting article..." : "Delete article"}
+                  </button>
+                )}
               </div>
             )}
             {isVoting && <p>Voting on article...</p>}
             {errorVoting && <p className={styles.error}>{errorVoting}</p>}
+            {errorDeletingArticle && (
+              <p className={styles.error}>{errorDeletingArticle}</p>
+            )}
           </div>
         </>
       )}
