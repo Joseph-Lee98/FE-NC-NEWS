@@ -1,15 +1,35 @@
 import React, { createContext, useState, useEffect } from "react";
+import api from "../utils/useApi";
 import { useNavigate } from "react-router-dom";
-import { loginUser, registerUser, deleteUserAccount } from "../utils/api";
+// import { loginUser, registerUser, deleteUserAccount } from "../utils/api";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  // const api = useApi();
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(
     !!localStorage.getItem("jwt")
   );
   const navigate = useNavigate();
+
+  const handleAuthError = (error) => {
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      error.response.data.message === "Invalid token"
+    ) {
+      localStorage.removeItem("jwt");
+      localStorage.removeItem("user");
+      navigate("/login");
+    }
+    throw error; // Re-throw the error to handle it in the UI if necessary
+  };
+
+  const getAuthHeader = () => {
+    const token = localStorage.getItem("jwt");
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  };
 
   useEffect(() => {
     const jwt = localStorage.getItem("jwt");
@@ -49,25 +69,33 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     try {
-      const loggedInUser = await loginUser(credentials);
-      setUser(loggedInUser);
+      const loggedInUser = await api.post("/users/login", credentials, {
+        headers: getAuthHeader(),
+      });
+      const { user, token } = loggedInUser.data;
+      localStorage.setItem("jwt", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      setUser(user);
       setIsAuthenticated(true);
       navigate("/");
     } catch (error) {
-      console.error("Login failed:", error);
-      throw error;
+      handleAuthError(error);
     }
   };
 
   const register = async (userData) => {
     try {
-      const registeredUser = await registerUser(userData);
-      setUser(registeredUser);
+      const registeredUser = await api.post("/users", userData, {
+        headers: getAuthHeader(),
+      });
+      const { user, token } = registeredUser.data;
+      localStorage.setItem("jwt", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      setUser(user);
       setIsAuthenticated(true);
       navigate("/");
     } catch (error) {
-      console.error("Registration failed:", error);
-      throw error;
+      handleAuthError(error);
     }
   };
 
@@ -82,15 +110,16 @@ export const AuthProvider = ({ children }) => {
   const deleteUser = async (username) => {
     console.log("got into the deleteUser function in AuthContext");
     try {
-      await deleteUserAccount(username);
+      await api.delete(`/users/${username}`, {
+        headers: getAuthHeader(),
+      });
       localStorage.removeItem("jwt");
       localStorage.removeItem("user");
       setUser(null);
       setIsAuthenticated(false);
       navigate("/register");
     } catch (error) {
-      console.error("Failed to delete user:", error);
-      throw error;
+      handleAuthError(error);
     }
   };
 
