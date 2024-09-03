@@ -4,6 +4,7 @@ import {
   fetchArticles,
   fetchArticleById,
   fetchTopics,
+  fetchCommentsById,
   postArticle,
   updateArticleById,
   deleteArticleById,
@@ -29,12 +30,15 @@ export const AppProvider = ({ children }) => {
   const [article, setArticle] = useState({});
   const [articleId, setArticleId] = useState(null);
   const [topics, setTopics] = useState([]);
+  const [comments, setComments] = useState([]);
   const [isLoadingArticles, setIsLoadingArticles] = useState(true);
   const [isLoadingArticle, setIsLoadingArticle] = useState(true);
   const [isLoadingTopics, setIsLoadingTopics] = useState(true);
+  const [isLoadingComments, setIsLoadingComments] = useState(true);
   const [errorFetchingArticles, setErrorFetchingArticles] = useState("");
   const [errorFetchingArticle, setErrorFetchingArticle] = useState("");
   const [errorFetchingTopics, setErrorFetchingTopics] = useState("");
+  const [errorFetchingComments, setErrorFetchingComments] = useState("");
 
   const navigate = useNavigate();
 
@@ -100,7 +104,24 @@ export const AppProvider = ({ children }) => {
         setIsLoadingArticle(false);
       }
     };
+
+    const loadComments = async () => {
+      try {
+        setErrorFetchingComments("");
+        setIsLoadingComments(true);
+        const response = await fetchCommentsById(articleId);
+        setComments(response.data);
+      } catch (error) {
+        setErrorFetchingComments(
+          "Failed to load comments, please try refreshing the page"
+        );
+      } finally {
+        setIsLoadingComments(false);
+      }
+    };
+
     loadArticle();
+    loadComments();
   }, [articleId]);
 
   useEffect(() => {
@@ -267,18 +288,24 @@ export const AppProvider = ({ children }) => {
         setArticleId,
         topics,
         setTopics,
+        comments,
+        setComments,
         isLoadingArticles,
         setIsLoadingArticles,
         isLoadingArticle,
         setIsLoadingArticle,
         isLoadingTopics,
         setIsLoadingTopics,
+        isLoadingComments,
+        setIsLoadingComments,
         errorFetchingArticle,
         setErrorFetchingArticle,
         errorFetchingArticles,
         setErrorFetchingArticles,
         errorFetchingTopics,
         setErrorFetchingTopics,
+        errorFetchingComments,
+        setErrorFetchingComments,
         login,
         register,
         logout,

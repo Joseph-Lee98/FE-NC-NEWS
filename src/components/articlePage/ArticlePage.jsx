@@ -4,6 +4,7 @@ import styles from "./ArticlePage.module.css";
 import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
 import ThumbDownAltOutlinedIcon from "@mui/icons-material/ThumbDownAltOutlined";
 import { AppContext } from "../../contexts/AppContext";
+import CommentCard from "../commentcard/Commentcard";
 
 const ArticlePage = () => {
   const navigate = useNavigate();
@@ -21,6 +22,9 @@ const ArticlePage = () => {
     removeArticle,
     isAuthenticated,
     user,
+    comments, // Get comments from context
+    isLoadingComments,
+    errorFetchingComments,
   } = useContext(AppContext);
 
   const [errorVoting, setErrorVoting] = useState("");
@@ -215,6 +219,22 @@ const ArticlePage = () => {
             {errorVoting && <p className={styles.error}>{errorVoting}</p>}
             {errorDeletingArticle && (
               <p className={styles.error}>{errorDeletingArticle}</p>
+            )}
+          </div>
+          <div className={styles.commentsContainer}>
+            <h2>Comments</h2>
+            {errorFetchingComments && (
+              <p className={styles.error}>{errorFetchingComments}</p>
+            )}
+            {isLoadingComments && <p>Loading comments...</p>}
+            {!errorFetchingComments &&
+            !isLoadingComments &&
+            comments.length > 0 ? (
+              comments.map((comment) => (
+                <CommentCard key={comment.comment_id} comment={comment} />
+              ))
+            ) : (
+              <p>No comments yet.</p>
             )}
           </div>
         </>

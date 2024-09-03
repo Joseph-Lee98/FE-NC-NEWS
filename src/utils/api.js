@@ -24,6 +24,10 @@ export const fetchTopics = () => {
   return api.get("/topics");
 };
 
+export const fetchCommentsById = (articleId) => {
+  return api.get(`/articles/${articleId}/comments`);
+};
+
 export const postArticle = (articleData) => {
   return api.post("/articles", articleData, {
     headers: getAuthHeader(),

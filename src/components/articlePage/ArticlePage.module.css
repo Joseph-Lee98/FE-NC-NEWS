@@ -78,3 +78,11 @@
 .deleteButton:hover {
   background-color: darkred;
 }
+
+.commentsContainer {
+  margin-top: 40px;
+}
+
+.error {
+  color: red;
+}
