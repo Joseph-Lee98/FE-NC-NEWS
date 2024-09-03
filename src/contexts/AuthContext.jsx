@@ -1,35 +1,51 @@
 import React, { createContext, useState, useEffect } from "react";
-import api from "../utils/useApi";
 import { useNavigate } from "react-router-dom";
-// import { loginUser, registerUser, deleteUserAccount } from "../utils/api";
+import { loginUser, registerUser, deleteUserAccount } from "../utils/api";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  // const api = useApi();
+  const [filters, setFilters] = useState({
+    sort_by: "created_at",
+    order_by: "desc",
+    topic: "",
+  });
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(
     !!localStorage.getItem("jwt")
   );
+  const [tokenInvalidated, setTokenInvalidated] = useState(false);
   const navigate = useNavigate();
 
   const handleAuthError = (error) => {
+    console.log("inside handleAuthError in AuthContext");
     if (
       error.response &&
       error.response.status === 401 &&
       error.response.data.message === "Invalid token"
     ) {
+      console.log("inside handleAuthError functionality in AuthContext");
       localStorage.removeItem("jwt");
       localStorage.removeItem("user");
-      navigate("/login");
+      setUser(null);
+      setIsAuthenticated(false);
+      setFilters({ sort_by: "created_at", order_by: "desc", topic: "" });
+      setTokenInvalidated(true);
     }
     throw error; // Re-throw the error to handle it in the UI if necessary
   };
 
-  const getAuthHeader = () => {
-    const token = localStorage.getItem("jwt");
-    return token ? { Authorization: `Bearer ${token}` } : {};
-  };
+  useEffect(() => {
+    console.log(
+      "inside the useEffect hook for tokenInvalidated in AuthContext"
+    );
+    if (tokenInvalidated) {
+      console.log(
+        "inside the useEffect hook functionality for tokenInvalidated in AuthContext"
+      );
+      navigate("/login");
+    }
+  }, [tokenInvalidated, navigate]);
 
   useEffect(() => {
     const jwt = localStorage.getItem("jwt");
@@ -55,7 +71,8 @@ export const AuthProvider = ({ children }) => {
       } else {
         setIsAuthenticated(false);
         setUser(null);
-        navigate("/login"); // Redirect to login if the JWT is removed or invalid
+        // navigate("/login");
+        // Redirect to login if the JWT is removed or invalid
       }
     };
 
@@ -69,14 +86,13 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     try {
-      const loggedInUser = await api.post("/users/login", credentials, {
-        headers: getAuthHeader(),
-      });
+      const loggedInUser = await loginUser(credentials);
       const { user, token } = loggedInUser.data;
       localStorage.setItem("jwt", token);
       localStorage.setItem("user", JSON.stringify(user));
       setUser(user);
       setIsAuthenticated(true);
+      setTokenInvalidated(false);
       navigate("/");
     } catch (error) {
       handleAuthError(error);
@@ -85,14 +101,13 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      const registeredUser = await api.post("/users", userData, {
-        headers: getAuthHeader(),
-      });
+      const registeredUser = await registerUser(userData);
       const { user, token } = registeredUser.data;
       localStorage.setItem("jwt", token);
       localStorage.setItem("user", JSON.stringify(user));
       setUser(user);
       setIsAuthenticated(true);
+      setTokenInvalidated(false);
       navigate("/");
     } catch (error) {
       handleAuthError(error);
@@ -108,11 +123,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   const deleteUser = async (username) => {
-    console.log("got into the deleteUser function in AuthContext");
     try {
-      await api.delete(`/users/${username}`, {
-        headers: getAuthHeader(),
-      });
+      await deleteUserAccount(username);
       localStorage.removeItem("jwt");
       localStorage.removeItem("user");
       setUser(null);
@@ -125,7 +137,17 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, isAuthenticated, login, register, logout, deleteUser }}
+      value={{
+        user,
+        isAuthenticated,
+        login,
+        register,
+        logout,
+        deleteUser,
+        filters,
+        setFilters,
+        setTokenInvalidated,
+      }}
     >
       {children}
     </AuthContext.Provider>

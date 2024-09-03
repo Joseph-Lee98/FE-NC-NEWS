@@ -1,10 +1,9 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArticlesContext } from "../../contexts/ArticlesContext";
 import styles from "./ArticlePage.module.css";
 import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
 import ThumbDownAltOutlinedIcon from "@mui/icons-material/ThumbDownAltOutlined";
-import { AuthContext } from "../../contexts/AuthContext";
+import { AppContext } from "../../contexts/AppContext";
 
 const ArticlePage = () => {
   const navigate = useNavigate();
@@ -20,9 +19,9 @@ const ArticlePage = () => {
     setArticleId,
     updateArticle,
     removeArticle,
-  } = useContext(ArticlesContext);
-
-  const { isAuthenticated, user } = useContext(AuthContext);
+    isAuthenticated,
+    user,
+  } = useContext(AppContext);
 
   const [errorVoting, setErrorVoting] = useState("");
   const [isVoting, setIsVoting] = useState(false);

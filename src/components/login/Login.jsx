@@ -1,20 +1,22 @@
 import React, { useState, useContext } from "react";
+import { AppContext } from "../../contexts/AppContext";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../contexts/AuthContext";
 import styles from "./Login.module.css";
 
 const LoginPage = () => {
-  const { login } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const { login, user, isAuthenticated, tokenInvalidated } =
+    useContext(AppContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  const navigate = useNavigate();
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      console.log("object sent when invoking login: ", { username, password });
       await login({ username, password });
+      navigate("/");
     } catch (err) {
       setError("Login failed. Please check your credentials and try again.");
     }

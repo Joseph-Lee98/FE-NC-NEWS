@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { ArticlesContext } from "../../contexts/ArticlesContext";
-import { AuthContext } from "../../contexts/AuthContext";
+import { AppContext } from "../../contexts/AppContext";
 import ArticleCard from "../articlecard/Articlecard";
 import styles from "./Homepage.module.css";
 import { v4 as uuidv4 } from "uuid";
@@ -15,12 +14,11 @@ const HomePage = () => {
     updateFilters,
     filters,
     setArticles,
-    refreshArticles,
     errorFetchingArticles,
     errorFetchingTopics,
-  } = useContext(ArticlesContext);
-
-  const { isAuthenticated, user } = useContext(AuthContext);
+    isAuthenticated,
+    user,
+  } = useContext(AppContext);
 
   const [newArticle, setNewArticle] = useState({
     title: "",

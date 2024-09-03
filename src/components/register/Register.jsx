@@ -1,10 +1,10 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../contexts/AuthContext";
+import { AppContext } from "../../contexts/AppContext";
 import styles from "./Register.module.css";
 
 const RegisterPage = () => {
-  const { register } = useContext(AuthContext);
+  const { register } = useContext(AppContext);
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
