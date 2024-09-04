@@ -23,3 +23,33 @@
 .commentDate {
   margin-right: 15px;
 }
+
+.actionContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.votingContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.voteIcon {
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.upvoted {
+  color: blue;
+}
+
+.downvoted {
+  color: red;
+}
+
+.error {
+  color: red;
+}

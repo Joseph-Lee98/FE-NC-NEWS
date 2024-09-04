@@ -22,7 +22,7 @@ const ArticlePage = () => {
     removeArticle,
     isAuthenticated,
     user,
-    comments, // Get comments from context
+    comments,
     isLoadingComments,
     errorFetchingComments,
   } = useContext(AppContext);

@@ -7,6 +7,7 @@ import {
   fetchCommentsById,
   postArticle,
   updateArticleById,
+  updateCommentById,
   deleteArticleById,
   loginUser,
   registerUser,
@@ -260,6 +261,14 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  const updateComment = async (commentId, incVotes) => {
+    try {
+      await updateCommentById(commentId, incVotes);
+    } catch (error) {
+      handleAuthError(error);
+    }
+  };
+
   const removeArticle = async (articleId) => {
     try {
       await deleteArticleById(articleId);
@@ -267,9 +276,6 @@ export const AppProvider = ({ children }) => {
       handleAuthError(error);
     }
   };
-
-  // Rest of the functions for managing articles, topics, user login, register, etc.
-  // Move all the functions from both ArticlesContext and AuthContext here.
 
   return (
     <AppContext.Provider
@@ -313,6 +319,7 @@ export const AppProvider = ({ children }) => {
         updateFilters,
         addArticle,
         updateArticle,
+        updateComment,
         removeArticle,
       }}
     >

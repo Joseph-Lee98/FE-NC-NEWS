@@ -42,7 +42,7 @@
 .votingContainer {
   display: flex;
   align-items: center;
-  gap: 10px; /* Space between the upvote and downvote icons */
+  gap: 10px;
 }
 
 .voteIcon {
@@ -51,17 +51,17 @@
 }
 
 .upvoted {
-  color: blue; /* Change to blue when upvoted */
+  color: blue;
 }
 
 .downvoted {
-  color: red; /* Change to red when downvoted */
+  color: red;
 }
 
 .actionContainer {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Space between vote icons and delete button */
+  justify-content: space-between;
   margin-top: 20px;
 }
 

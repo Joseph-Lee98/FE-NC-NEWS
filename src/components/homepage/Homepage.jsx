@@ -24,7 +24,7 @@ const HomePage = () => {
     title: "",
     body: "",
     topic: "",
-    article_img_url: "", // Optional field for image URL
+    article_img_url: "",
   });
   const [errorPosting, setErrorPosting] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -40,7 +40,7 @@ const HomePage = () => {
     const { name, value } = e.target;
     setNewArticle((prevArticle) => ({
       ...prevArticle,
-      [name]: value || "", // Ensure that value is never undefined
+      [name]: value || "",
     }));
   };
 

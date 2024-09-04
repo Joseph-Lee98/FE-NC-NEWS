@@ -44,6 +44,16 @@ export const updateArticleById = (articleId, incVotes) => {
   );
 };
 
+export const updateCommentById = (commentId, incVotes) => {
+  return api.patch(
+    `/comments/${commentId}`,
+    { inc_votes: incVotes },
+    {
+      headers: getAuthHeader(),
+    }
+  );
+};
+
 export const deleteArticleById = (articleId) => {
   return api.delete(`/articles/${articleId}`, {
     headers: getAuthHeader(),
