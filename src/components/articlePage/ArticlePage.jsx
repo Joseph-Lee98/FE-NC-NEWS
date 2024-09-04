@@ -190,7 +190,7 @@ const ArticlePage = () => {
               <span>Comments: {article.comment_count}</span>
             </div>
             {isAuthenticated && (
-              <div className="styles.actionContainer">
+              <div className={styles.actionContainer}>
                 <div className={styles.votingContainer}>
                   <ThumbUpAltOutlinedIcon
                     onClick={handleUpvote}
@@ -215,6 +215,7 @@ const ArticlePage = () => {
                 )}
               </div>
             )}
+
             {isVoting && <p>Voting on article...</p>}
             {errorVoting && <p className={styles.error}>{errorVoting}</p>}
             {errorDeletingArticle && (
