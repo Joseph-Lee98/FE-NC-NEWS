@@ -5,15 +5,59 @@ import ThumbDownAltOutlinedIcon from "@mui/icons-material/ThumbDownAltOutlined";
 import { AppContext } from "../../contexts/AppContext";
 
 const CommentCard = ({ comment }) => {
-  const { isAuthenticated, updateComment, comments, setComments } =
-    useContext(AppContext);
+  const {
+    isAuthenticated,
+    user,
+    updateComment,
+    removeComment,
+    comments,
+    setComments,
+    articles,
+    setArticles,
+    setArticle,
+  } = useContext(AppContext);
 
   const [errorVoting, setErrorVoting] = useState("");
   const [isVoting, setIsVoting] = useState(false);
   const [upvoted, setUpvoted] = useState(false);
   const [downvoted, setDownvoted] = useState(false);
+  const [errorDeletingComment, setErrorDeletingComment] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const commentId = comment.comment_id;
+
+  const handleDelete = async () => {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this comment? This action cannot be undone."
+      )
+    ) {
+      setErrorDeletingComment("");
+      setIsDeleting(true);
+      const updatedComments = comments.filter(
+        (comment) => comment.comment_id !== commentId
+      );
+      const updatedArticles = (prevArticles) =>
+        prevArticles.map((article) =>
+          article.article_id === comment.article_id
+            ? { ...article, comment_count: article.comment_count - 1 }
+            : article
+        );
+      try {
+        await removeComment(commentId);
+        setComments(updatedComments);
+        setArticle((prevArticle) => ({
+          ...prevArticle,
+          comment_count: prevArticle.comment_count - 1,
+        }));
+        setArticles(updatedArticles);
+      } catch (error) {
+        setErrorDeletingComment("Failed to delete comment. Please try again.");
+      } finally {
+        setIsDeleting(false);
+      }
+    }
+  };
 
   const handleUpvote = async () => {
     if (downvoted) return;
@@ -111,6 +155,10 @@ const CommentCard = ({ comment }) => {
     }
   };
 
+  const canDelete =
+    (user?.username && comment.author && user?.username === comment.author) ||
+    user?.role === "admin";
+
   return (
     <div className={styles.commentCard}>
       <p className={styles.commentBody}>{comment.body}</p>
@@ -135,10 +183,18 @@ const CommentCard = ({ comment }) => {
               }`}
             />
           </div>
+          {canDelete && (
+            <button onClick={handleDelete} className={styles.deleteButton}>
+              {isDeleting ? "Deleting comment..." : "Delete comment"}
+            </button>
+          )}
         </div>
       )}
       {isVoting && <p>Voting...</p>}
       {errorVoting && <p className={styles.error}>{errorVoting}</p>}
+      {errorDeletingComment && (
+        <p className={styles.error}>{errorDeletingComment}</p>
+      )}
     </div>
   );
 };

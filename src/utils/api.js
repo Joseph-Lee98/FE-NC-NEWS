@@ -60,6 +60,10 @@ export const deleteArticleById = (articleId) => {
   });
 };
 
+export const deleteCommentById = (commentId) => {
+  return api.delete(`/comments/${commentId}`, { headers: getAuthHeader() });
+};
+
 export const loginUser = (credentials) => {
   return api.post("/users/login", credentials, {
     headers: getAuthHeader(),

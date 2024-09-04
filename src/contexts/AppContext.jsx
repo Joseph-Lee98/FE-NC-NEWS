@@ -9,6 +9,7 @@ import {
   updateArticleById,
   updateCommentById,
   deleteArticleById,
+  deleteCommentById,
   loginUser,
   registerUser,
   deleteUserAccount,
@@ -277,6 +278,14 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  const removeComment = async (commentId) => {
+    try {
+      await deleteCommentById(commentId);
+    } catch (error) {
+      handleAuthError(error);
+    }
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -321,6 +330,7 @@ export const AppProvider = ({ children }) => {
         updateArticle,
         updateComment,
         removeArticle,
+        removeComment,
       }}
     >
       {children}
