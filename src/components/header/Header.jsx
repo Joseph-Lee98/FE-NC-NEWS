@@ -8,6 +8,9 @@ const Header = () => {
   const { user, isAuthenticated, logout, deleteUser } = useContext(AppContext);
   const navigate = useNavigate();
 
+  const defaultImgUrl =
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSD6fmrTz-5wPJlO5UisF54wEFlfFdLim21Vw&s";
+
   const handleLogout = () => {
     logout();
   };
@@ -28,6 +31,17 @@ const Header = () => {
         <Link to="/">
           <img src={logo} alt="Logo" className={styles.logo} />
         </Link>
+      </div>
+      <div className={styles.centerSection}>
+        {!isAuthenticated && (
+          <p className={styles.welcomeMessage}>Hello, Guest!</p>
+        )}
+        {isAuthenticated && user?.role === "user" && (
+          <p className={styles.welcomeMessage}>Welcome, {user.username}!</p>
+        )}
+        {isAuthenticated && user?.role === "admin" && (
+          <p className={styles.welcomeMessage}>Welcome Admin!</p>
+        )}
       </div>
       <nav className={styles.navLinks}>
         {!isAuthenticated && (
@@ -51,6 +65,20 @@ const Header = () => {
             <button onClick={handleAccountDelete} className={styles.button}>
               Delete Account
             </button>
+            {user.avatar_url && (
+              <img
+                src={user.avatar_url}
+                alt="User Avatar"
+                className={styles.avatar}
+              />
+            )}
+            {!user.avatar_url && (
+              <img
+                src={defaultImgUrl}
+                alt="Default Avatar"
+                className={styles.avatar}
+              />
+            )}
           </>
         )}
         {isAuthenticated && user?.role === "admin" && (
@@ -61,6 +89,11 @@ const Header = () => {
             <button onClick={handleLogout} className={styles.button}>
               Logout
             </button>
+            <img
+              src={user.avatar_url}
+              alt="Admin Avatar"
+              className={styles.avatar}
+            />
           </>
         )}
       </nav>
