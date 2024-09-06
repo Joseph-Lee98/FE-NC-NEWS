@@ -48,7 +48,7 @@ const HomePage = () => {
     e.preventDefault();
     setErrorPosting("");
     setSuccessMessage("");
-    setIsPosting("Posting comment...");
+    setIsPosting("Posting article...");
     const tempId = uuidv4();
     const placeholderArticle = {
       ...newArticle,

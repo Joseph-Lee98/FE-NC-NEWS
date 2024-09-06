@@ -34,6 +34,12 @@ export const postArticle = (articleData) => {
   });
 };
 
+export const postComment = (articleId, commentData) => {
+  return api.post(`/articles/${articleId}/comments`, commentData, {
+    headers: getAuthHeader(),
+  });
+};
+
 export const updateArticleById = (articleId, incVotes) => {
   return api.patch(
     `/articles/${articleId}`,

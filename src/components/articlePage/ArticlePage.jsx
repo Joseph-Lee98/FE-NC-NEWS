@@ -5,6 +5,7 @@ import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
 import ThumbDownAltOutlinedIcon from "@mui/icons-material/ThumbDownAltOutlined";
 import { AppContext } from "../../contexts/AppContext";
 import CommentCard from "../commentcard/Commentcard";
+import { v4 as uuidv4 } from "uuid";
 
 const ArticlePage = () => {
   const navigate = useNavigate();
@@ -20,9 +21,11 @@ const ArticlePage = () => {
     setArticleId,
     updateArticle,
     removeArticle,
+    addComment,
     isAuthenticated,
     user,
     comments,
+    setComments,
     isLoadingComments,
     errorFetchingComments,
   } = useContext(AppContext);
@@ -33,6 +36,12 @@ const ArticlePage = () => {
   const [downvoted, setDownvoted] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [errorDeletingArticle, setErrorDeletingArticle] = useState("");
+  const [newComment, setNewComment] = useState({
+    body: "",
+  });
+  const [errorPosting, setErrorPosting] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [isPosting, setIsPosting] = useState(false);
 
   useEffect(() => {
     setArticleId(article_id);
@@ -41,6 +50,68 @@ const ArticlePage = () => {
       setArticleId(null); // Reset articleId when the component unmounts
     };
   }, [article_id, setArticleId]);
+
+  const handleInputChange = (e) => {
+    const { value } = e.target;
+    setNewComment({ body: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("new comment state variable: ", newComment);
+    setErrorPosting("");
+    setSuccessMessage("");
+    setIsPosting("Posting comment...");
+    const tempId = uuidv4();
+    const placeholderComment = {
+      ...newComment,
+      article_id: article_idNumber,
+      comment_id: tempId,
+      author: user.username,
+      created_at: new Date().toISOString(),
+      votes: 0,
+      isPlaceholder: true,
+    };
+    const copyComments = [...comments];
+    const copyArticle = { ...article };
+    const copyArticles = [...articles];
+
+    const updatedArticles = (prevArticles) =>
+      prevArticles.map((article) =>
+        article.article_id === article_idNumber
+          ? { ...article, comment_count: article.comment_count + 1 }
+          : article
+      );
+
+    setArticles(updatedArticles);
+    setArticle((prevArticle) => ({
+      ...article,
+      comment_count: article.comment_count + 1,
+    }));
+    setComments((prevComments) => [placeholderComment, ...prevComments]);
+    try {
+      console.log("article id number variable: ", article_idNumber);
+      console.log("type of article id number: ", typeof article_idNumber);
+      const postedComment = await addComment(article_idNumber, newComment);
+      setComments((prevComments) =>
+        prevComments.map((comment) =>
+          comment.isPlaceholder ? postedComment : comment
+        )
+      );
+      setNewComment({
+        body: "",
+      });
+      setSuccessMessage("Comment successfully created!");
+    } catch (error) {
+      setArticles(copyArticles);
+      setArticle(copyArticle);
+      setComments(copyComments);
+      setErrorPosting("Failed to create comment. Please try again.");
+      console.log("ERROR: ", error);
+    } finally {
+      setIsPosting("");
+    }
+  };
 
   const handleUpvote = async () => {
     if (downvoted) return;
@@ -222,6 +293,35 @@ const ArticlePage = () => {
               <p className={styles.error}>{errorDeletingArticle}</p>
             )}
           </div>
+          {isAuthenticated && (
+            <div className={styles.newCommentFormContainer}>
+              <h2>Create a New Comment</h2>
+              {errorPosting && <p className={styles.error}>{errorPosting}</p>}
+              {successMessage && (
+                <p className={styles.success}>{successMessage}</p>
+              )}
+              <form onSubmit={handleSubmit} className={styles.form}>
+                <label htmlFor="comment" className={styles.label}>
+                  Comment
+                </label>
+                <textarea
+                  id="comment"
+                  name="comment"
+                  value={newComment.body}
+                  onChange={handleInputChange}
+                  className={styles.textarea}
+                  required
+                />
+                <button
+                  type="submit"
+                  className={styles.button}
+                  disabled={!!isPosting} // Disable button if isPosting is truthy
+                >
+                  {isPosting ? "Creating Comment..." : "Create Comment"}
+                </button>
+              </form>
+            </div>
+          )}
           <div className={styles.commentsContainer}>
             <h2>Comments</h2>
             {errorFetchingComments && (

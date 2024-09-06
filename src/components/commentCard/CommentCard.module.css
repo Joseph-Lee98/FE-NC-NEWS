@@ -6,6 +6,16 @@
   background-color: #f9f9f9;
 }
 
+.commentCard:hover {
+  transform: scale(1.02);
+}
+
+.disabledCommentCard {
+  cursor: not-allowed;
+  opacity: 0.6; /* Reduce opacity to signal that the card is disabled */
+  transform: none; /* Disable hover effect */
+}
+
 .commentBody {
   font-size: 16px;
   margin-bottom: 10px;

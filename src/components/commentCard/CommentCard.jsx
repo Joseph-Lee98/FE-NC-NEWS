@@ -160,7 +160,11 @@ const CommentCard = ({ comment }) => {
     user?.role === "admin";
 
   return (
-    <div className={styles.commentCard}>
+    <div
+      className={`${styles.commentCard} ${
+        comment.isPlaceholder ? styles.disabledCommentCard : ""
+      }`}
+    >
       <p className={styles.commentBody}>{comment.body}</p>
       <div className={styles.commentDetails}>
         <span className={styles.commentAuthor}>Author: {comment.author}</span>
@@ -169,7 +173,7 @@ const CommentCard = ({ comment }) => {
           Created at: {new Date(comment.created_at).toLocaleDateString()}
         </span>
       </div>
-      {isAuthenticated && (
+      {isAuthenticated && !comment.isPlaceholder && (
         <div className={styles.actionContainer}>
           <div className={styles.votingContainer}>
             <ThumbUpAltOutlinedIcon

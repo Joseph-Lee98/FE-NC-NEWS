@@ -6,6 +6,7 @@ import {
   fetchTopics,
   fetchCommentsById,
   postArticle,
+  postComment,
   updateArticleById,
   updateCommentById,
   deleteArticleById,
@@ -254,6 +255,15 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  const addComment = async (articleId, commentData) => {
+    try {
+      const response = await postComment(articleId, commentData);
+      return response.data;
+    } catch (error) {
+      handleAuthError(error);
+    }
+  };
+
   const updateArticle = async (articleId, incVotes) => {
     try {
       await updateArticleById(articleId, incVotes);
@@ -327,6 +337,7 @@ export const AppProvider = ({ children }) => {
         deleteUser,
         updateFilters,
         addArticle,
+        addComment,
         updateArticle,
         updateComment,
         removeArticle,
