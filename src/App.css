@@ -8,3 +8,8 @@ a {
   text-decoration: none;
   color: inherit;
 }
+
+.bodyContent {
+  margin-top: 80px; /* Adjust based on the height of your header */
+  padding: 20px; /* Optional padding for spacing */
+}
