@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "./Login.module.css";
 
 const LoginPage = () => {
-  const { login, user, isAuthenticated, tokenInvalidated } =
+  const { login, user, isAuthenticated, tokenInvalidated, authErrorMessage } =
     useContext(AppContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -26,6 +26,7 @@ const LoginPage = () => {
     <div className={styles.loginContainer}>
       <div className={styles.formContainer}>
         <h2 className={styles.title}>Login</h2>
+        {authErrorMessage && <p className={styles.error}>{authErrorMessage}</p>}
         {error && <p className={styles.error}>{error}</p>}
         <form onSubmit={handleLogin} className={styles.form}>
           <label htmlFor="username" className={styles.label}>
