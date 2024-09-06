@@ -1,0 +1,79 @@
+.commentCard {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.commentCard:hover {
+  transform: scale(1.02);
+}
+
+.disabledCommentCard {
+  cursor: not-allowed;
+  opacity: 0.6; /* Reduce opacity to signal that the card is disabled */
+  transform: none; /* Disable hover effect */
+}
+
+.commentBody {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.commentDetails {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #555;
+}
+
+.commentAuthor,
+.commentVotes,
+.commentDate {
+  margin-right: 15px;
+}
+
+.actionContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.votingContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.voteIcon {
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.upvoted {
+  color: blue;
+}
+
+.downvoted {
+  color: red;
+}
+
+.deleteButton {
+  background-color: red;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.deleteButton:hover {
+  background-color: darkred;
+}
+
+.error {
+  color: red;
+}

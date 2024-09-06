@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../../contexts/AuthContext";
+import { AppContext } from "../../contexts/AppContext";
 import styles from "./Header.module.css";
 import logo from "/logo.jpeg";
 
 const Header = () => {
-  const { user, isAuthenticated, logout, deleteUser } = useContext(AuthContext);
+  const { user, isAuthenticated, logout, deleteUser } = useContext(AppContext);
   const navigate = useNavigate();
 
   const handleLogout = () => {

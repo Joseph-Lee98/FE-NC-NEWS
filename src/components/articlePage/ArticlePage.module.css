@@ -1,0 +1,131 @@
+.articlePageContainer {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.articleContent {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.articleImage {
+  width: 100%;
+  height: auto;
+  max-width: 400px;
+  margin: 0 auto 20px;
+  display: block;
+  border-radius: 8px;
+}
+
+.articleTitle {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.articleBody {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.articleDetails {
+  font-size: 14px;
+  color: #555;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.newCommentFormContainer {
+  margin-bottom: 40px;
+  background-color: #333;
+  padding: 20px;
+  border-radius: 8px;
+  color: white;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.label {
+  font-weight: bold;
+}
+
+.textarea {
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+}
+
+.button {
+  padding: 10px;
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.button:hover {
+  background-color: #555;
+}
+
+.votingContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.voteIcon {
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.upvoted {
+  color: blue;
+}
+
+.downvoted {
+  color: red;
+}
+
+.actionContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.deleteButton {
+  background-color: red;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.deleteButton:hover {
+  background-color: darkred;
+}
+
+.commentsContainer {
+  margin-top: 40px;
+}
+
+.error {
+  color: red;
+}
+
+.success {
+  color: green;
+}
