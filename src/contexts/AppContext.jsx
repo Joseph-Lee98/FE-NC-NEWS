@@ -84,8 +84,6 @@ export const AppProvider = ({ children }) => {
       } else {
         setIsAuthenticated(false);
         setUser(null);
-        // navigate("/login");
-        // Redirect to login if the JWT is removed or invalid
       }
     };
 

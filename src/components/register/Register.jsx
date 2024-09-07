@@ -16,7 +16,6 @@ const RegisterPage = () => {
     e.preventDefault();
     try {
       const userData = { username, name, password, avatar_url: avatarUrl };
-      console.log("object sent when invoking register: ", userData);
       await register(userData);
     } catch (err) {
       setError("Registration failed. Please check your details and try again.");

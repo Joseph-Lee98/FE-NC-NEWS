@@ -58,7 +58,6 @@ const ArticlePage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("new comment state variable: ", newComment);
     setErrorPosting("");
     setSuccessMessage("");
     setIsPosting("Posting comment...");
@@ -90,8 +89,6 @@ const ArticlePage = () => {
     }));
     setComments((prevComments) => [placeholderComment, ...prevComments]);
     try {
-      console.log("article id number variable: ", article_idNumber);
-      console.log("type of article id number: ", typeof article_idNumber);
       const postedComment = await addComment(article_idNumber, newComment);
       setComments((prevComments) =>
         prevComments.map((comment) =>
@@ -107,7 +104,6 @@ const ArticlePage = () => {
       setArticle(copyArticle);
       setComments(copyComments);
       setErrorPosting("Failed to create comment. Please try again.");
-      console.log("ERROR: ", error);
     } finally {
       setIsPosting("");
     }
