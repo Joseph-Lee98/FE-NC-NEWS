@@ -2,11 +2,12 @@ import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AppContext } from "../../contexts/AppContext";
 import styles from "./Header.module.css";
-import logo from "/logo.jpeg";
 
 const Header = () => {
   const { user, isAuthenticated, logout, deleteUser } = useContext(AppContext);
   const navigate = useNavigate();
+
+  const logoUrl = "/logo.jpeg";
 
   const defaultImgUrl =
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSD6fmrTz-5wPJlO5UisF54wEFlfFdLim21Vw&s";
@@ -29,7 +30,7 @@ const Header = () => {
     <header className={styles.header}>
       <div className={styles.logoContainer}>
         <Link to="/">
-          <img src={logo} alt="Logo" className={styles.logo} />
+          <img src={logoUrl} alt="Logo" className={styles.logo} />
         </Link>
       </div>
       <div className={styles.centerSection}>
