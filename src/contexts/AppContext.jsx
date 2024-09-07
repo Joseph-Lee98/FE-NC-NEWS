@@ -43,6 +43,8 @@ export const AppProvider = ({ children }) => {
   const [errorFetchingTopics, setErrorFetchingTopics] = useState("");
   const [errorFetchingComments, setErrorFetchingComments] = useState("");
 
+  const [authErrorMessage, setAuthErrorMessage] = useState("");
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -51,6 +53,10 @@ export const AppProvider = ({ children }) => {
       setTokenInvalidated(false);
     }
   }, [tokenInvalidated, navigate]);
+
+  useEffect(() => {
+    if (isAuthenticated) setAuthErrorMessage("");
+  }, [isAuthenticated]);
 
   useEffect(() => {
     const jwt = localStorage.getItem("jwt");
@@ -78,8 +84,6 @@ export const AppProvider = ({ children }) => {
       } else {
         setIsAuthenticated(false);
         setUser(null);
-        // navigate("/login");
-        // Redirect to login if the JWT is removed or invalid
       }
     };
 
@@ -183,6 +187,7 @@ export const AppProvider = ({ children }) => {
       localStorage.removeItem("user");
       setUser(null);
       setIsAuthenticated(false);
+      setAuthErrorMessage("Your session has expired. Please log in again.");
       setFilters({ sort_by: "created_at", order_by: "desc", topic: "" });
       setTokenInvalidated(true);
     }
@@ -342,6 +347,7 @@ export const AppProvider = ({ children }) => {
         updateComment,
         removeArticle,
         removeComment,
+        authErrorMessage,
       }}
     >
       {children}

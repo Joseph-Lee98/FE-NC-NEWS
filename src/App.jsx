@@ -15,14 +15,16 @@ function App() {
     <Router>
       <AppProvider>
         <Header />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/article/:article_id" element={<ArticlePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/user/:username" element={<UserPage />} />
-          <Route path="/admin" element={<AdminPage />} />
-        </Routes>
+        <div className="bodyContent">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/article/:article_id" element={<ArticlePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/user/:username" element={<UserPage />} />
+            <Route path="/admin" element={<AdminPage />} />
+          </Routes>
+        </div>
       </AppProvider>
     </Router>
   );

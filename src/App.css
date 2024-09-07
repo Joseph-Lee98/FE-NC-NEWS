@@ -8,3 +8,8 @@ a {
   text-decoration: none;
   color: inherit;
 }
+
+.bodyContent {
+  margin-top: 80px;
+  padding: 20px;
+}

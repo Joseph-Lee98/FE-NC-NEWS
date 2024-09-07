@@ -1,10 +1,15 @@
 .header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
   background-color: #333;
   color: white;
+  z-index: 1000;
 }
 
 .logoContainer {
@@ -18,6 +23,7 @@
 
 .navLinks {
   display: flex;
+  align-items: center;
   gap: 20px;
 }
 
@@ -42,4 +48,28 @@
   background: none;
   border: none;
   padding: 0;
+}
+
+.centerSection {
+  flex-grow: 1; /* Pushes content to the center */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.welcomeMessage {
+  font-size: 18px;
+  color: #fff;
+  padding: 5px 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  text-shadow: 1px 1px 2px #000;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid white;
 }
