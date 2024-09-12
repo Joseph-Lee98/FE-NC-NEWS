@@ -35,10 +35,10 @@ const Header = () => {
       </div>
       <div className={styles.centerSection}>
         {!isAuthenticated && (
-          <p className={styles.welcomeMessage}>Hello, Guest!</p>
+          <p className={styles.welcomeMessage}>Welcome Guest!</p>
         )}
         {isAuthenticated && user?.role === "user" && (
-          <p className={styles.welcomeMessage}>Welcome, {user.username}!</p>
+          <p className={styles.welcomeMessage}>Welcome {user.name}!</p>
         )}
         {isAuthenticated && user?.role === "admin" && (
           <p className={styles.welcomeMessage}>Welcome Admin!</p>

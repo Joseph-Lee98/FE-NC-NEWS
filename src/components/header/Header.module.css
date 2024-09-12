@@ -18,7 +18,14 @@
 }
 
 .logo {
-  height: 40px;
+  height: 40px; /* Set a fixed height */
+  width: auto; /* Ensure the aspect ratio is maintained by adjusting the width automatically */
+}
+
+@media (max-width: 768px) {
+  .logo {
+    height: 35px; /* Slightly reduce the height for smaller screens */
+  }
 }
 
 .navLinks {
