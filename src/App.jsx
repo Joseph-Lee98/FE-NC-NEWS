@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AppProvider } from "./contexts/AppContext.jsx";
 import Header from "./components/header/Header.jsx";
 import HomePage from "./components/homepage/Homepage.jsx";
-import ArticlePage from "./components/articlepage/Articlepage.jsx";
+import ArticlePage from "./components/articlepage/ArticlePage.jsx";
 import LoginPage from "./components/login/Login.jsx";
 import RegisterPage from "./components/register/Register.jsx";
 import UserPage from "./components/userpage/Userpage.jsx";
