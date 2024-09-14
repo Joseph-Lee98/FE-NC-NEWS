@@ -17,7 +17,7 @@
   max-height: 90vh; /* Ensure the form doesn't exceed 90% of the viewport height */
   max-width: 90vw; /* Ensure the form doesn't exceed 90% of the viewport width */
   text-align: center;
-  overflow-y: auto; /* Enable vertical scrolling if content overflows */
+  /* overflow-y: auto;  */
 }
 
 .title {
@@ -61,13 +61,18 @@
   margin-bottom: 20px;
 }
 
+@media (max-height: 500px) {
+  .formContainer {
+    overflow-y: auto; /* Enable internal scrolling */
+  }
+}
+
 /* Media Queries */
 @media (max-width: 768px) {
   .formContainer {
     height: 315px;
     width: 350px;
     padding: 15px;
-    overflow-y: auto; /* Ensure scrolling is available on smaller screens */
   }
   .input {
     margin-bottom: 15px;
@@ -93,7 +98,6 @@
     height: 270px;
     width: 300px;
     padding: 10px;
-    overflow-y: auto; /* Internal scrolling for small screens */
   }
   .input {
     margin-bottom: 10px;
