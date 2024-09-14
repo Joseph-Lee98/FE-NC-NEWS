@@ -8,6 +8,7 @@ import LoginPage from "./components/login/Login.jsx";
 import RegisterPage from "./components/register/Register.jsx";
 import UserPage from "./components/userpage/Userpage.jsx";
 import AdminPage from "./components/admin/Admin.jsx";
+import ErrorPage from "./components/errorpage/ErrorPage.jsx";
 import "./app.css";
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/user/:username" element={<UserPage />} />
             <Route path="/admin" element={<AdminPage />} />
+            <Route path="*" element={<ErrorPage />} />
           </Routes>
         </div>
       </AppProvider>
