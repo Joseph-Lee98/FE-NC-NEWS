@@ -120,40 +120,6 @@ const HomePage = () => {
         !isLoadingArticles &&
         !isLoadingTopics && (
           <>
-            <div className={styles.filterContainer}>
-              <select
-                name="topic"
-                value={filters.topic || ""}
-                onChange={handleFilterChange}
-                className={styles.filterSelect}
-              >
-                <option value="">Select Topic</option>
-                {topics.map((topic) => (
-                  <option key={topic.slug} value={topic.slug}>
-                    {topic.slug}
-                  </option>
-                ))}
-              </select>
-              <select
-                name="sort_by"
-                value={filters.sort_by || "created_at"}
-                onChange={handleFilterChange}
-                className={styles.filterSelect}
-              >
-                <option value="created_at">Date</option>
-                <option value="votes">Votes</option>
-                <option value="comment_count">Comments</option>
-              </select>
-              <select
-                name="order_by"
-                value={filters.order_by || "desc"}
-                onChange={handleFilterChange}
-                className={styles.filterSelect}
-              >
-                <option value="desc">Descending</option>
-                <option value="asc">Ascending</option>
-              </select>
-            </div>
             {isAuthenticated && (
               <div className={styles.newArticleFormContainer}>
                 <h2>Create a New Article</h2>
@@ -228,6 +194,40 @@ const HomePage = () => {
                 </form>
               </div>
             )}
+            <div className={styles.filterContainer}>
+              <select
+                name="topic"
+                value={filters.topic || ""}
+                onChange={handleFilterChange}
+                className={styles.filterSelect}
+              >
+                <option value="">Select Topic</option>
+                {topics.map((topic) => (
+                  <option key={topic.slug} value={topic.slug}>
+                    {topic.slug}
+                  </option>
+                ))}
+              </select>
+              <select
+                name="sort_by"
+                value={filters.sort_by || "created_at"}
+                onChange={handleFilterChange}
+                className={styles.filterSelect}
+              >
+                <option value="created_at">Date</option>
+                <option value="votes">Votes</option>
+                <option value="comment_count">Comments</option>
+              </select>
+              <select
+                name="order_by"
+                value={filters.order_by || "desc"}
+                onChange={handleFilterChange}
+                className={styles.filterSelect}
+              >
+                <option value="desc">Descending</option>
+                <option value="asc">Ascending</option>
+              </select>
+            </div>
             <div className={styles.articlesContainer}>
               {articles.map((article) => (
                 <ArticleCard key={article.article_id} article={article} />

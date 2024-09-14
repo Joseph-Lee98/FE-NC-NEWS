@@ -1,11 +1,14 @@
 .homepageContainer {
   padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .filterContainer {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 
 .filterSelect {
@@ -16,17 +19,25 @@
 }
 
 .newArticleFormContainer {
-  margin-bottom: 40px;
   background-color: #333;
   padding: 20px;
   border-radius: 8px;
   color: white;
+  margin: 0 auto;
+  width: 70%; /* Desktop width */
+  max-width: 800px; /* Max width to ensure it doesn’t get too wide */
+  text-align: center;
+  margin-bottom: 40px;
+  max-height: 85vh; /* Limit form height to 85% of viewport height */
+  overflow-y: auto; /* Enable internal scrolling if form content exceeds height */
 }
 
 .form {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .label {
@@ -68,4 +79,70 @@
 
 .success {
   color: green;
+}
+
+/* Responsive Styling */
+
+@media (max-width: 1200px) {
+  .newArticleFormContainer {
+    width: 80%; /* Slightly larger width for smaller desktop screens */
+  }
+
+  .form {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .newArticleFormContainer {
+    width: 90%; /* Adjust width for tablet screens */
+  }
+
+  .form {
+    width: 100%; /* Form should always take full width of container */
+  }
+
+  .filterContainer {
+    flex-direction: column;
+  }
+
+  .input,
+  .textarea,
+  .select,
+  .button {
+    font-size: 14px; /* Smaller font for tablets */
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .newArticleFormContainer {
+    width: 90%; /* Take more width on landscape */
+    height: 50vh; /* Limit height to 50% of the viewport */
+    overflow-y: auto; /* Enable internal scrolling */
+  }
+}
+
+@media (max-width: 480px) {
+  .newArticleFormContainer {
+    width: 95%; /* Maximize space for mobile screens */
+  }
+
+  .form {
+    width: 100%;
+  }
+
+  .filterContainer {
+    flex-direction: column;
+  }
+
+  .input,
+  .textarea,
+  .select,
+  .button {
+    font-size: 12px; /* Smaller font for mobile */
+  }
+
+  .button {
+    padding: 8px; /* Smaller padding for mobile */
+  }
 }

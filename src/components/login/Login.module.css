@@ -3,17 +3,21 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
+  padding: 20px;
 }
 
 .formContainer {
   background-color: #333;
   color: white;
-  padding: 40px;
+  padding: 20px;
   border-radius: 8px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  max-width: 400px;
-  width: 100%;
+  height: 360px;
+  width: 400px;
+  max-height: 90vh; /* Ensure the form doesn't exceed 90% of the viewport height */
+  max-width: 90vw; /* Ensure the form doesn't exceed 90% of the viewport width */
   text-align: center;
+  /* overflow-y: auto;  */
 }
 
 .title {
@@ -55,4 +59,61 @@
 .error {
   color: red;
   margin-bottom: 20px;
+}
+
+@media (max-height: 500px) {
+  .formContainer {
+    overflow-y: auto; /* Enable internal scrolling */
+  }
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .formContainer {
+    height: 315px;
+    width: 350px;
+    padding: 15px;
+  }
+  .input {
+    margin-bottom: 15px;
+  }
+  .input,
+  .button {
+    font-size: 12px;
+  }
+  .title {
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+  .label {
+    margin-bottom: 6px;
+  }
+  .error {
+    margin-bottom: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .formContainer {
+    height: 270px;
+    width: 300px;
+    padding: 10px;
+  }
+  .input {
+    margin-bottom: 10px;
+  }
+  .input,
+  .button {
+    font-size: 10px;
+  }
+  .title {
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
+  .label {
+    margin-bottom: 4px;
+  }
+  .error {
+    margin-bottom: 10px;
+  }
 }
