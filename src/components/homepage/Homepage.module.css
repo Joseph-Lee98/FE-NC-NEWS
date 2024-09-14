@@ -28,6 +28,8 @@
   max-width: 800px; /* Max width to ensure it doesn’t get too wide */
   text-align: center;
   margin-bottom: 40px;
+  max-height: 85vh; /* Limit form height to 85% of viewport height */
+  overflow-y: auto; /* Enable internal scrolling if form content exceeds height */
 }
 
 .form {
@@ -109,6 +111,14 @@
   .select,
   .button {
     font-size: 14px; /* Smaller font for tablets */
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .newArticleFormContainer {
+    width: 90%; /* Take more width on landscape */
+    height: 50vh; /* Limit height to 50% of the viewport */
+    overflow-y: auto; /* Enable internal scrolling */
   }
 }
 
