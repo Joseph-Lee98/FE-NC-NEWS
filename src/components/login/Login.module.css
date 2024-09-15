@@ -2,8 +2,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   height: 100vh;
   padding: 20px;
+  overflow-y: auto;
 }
 
 .formContainer {
@@ -12,12 +14,13 @@
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  height: 360px;
+  height: auto;
   width: 400px;
   max-height: 90vh; /* Ensure the form doesn't exceed 90% of the viewport height */
+  min-height: 250px;
   max-width: 90vw; /* Ensure the form doesn't exceed 90% of the viewport width */
   text-align: center;
-  /* overflow-y: auto;  */
+  overflow-y: auto;
 }
 
 .title {
@@ -61,9 +64,104 @@
   margin-bottom: 20px;
 }
 
+.demoContainer {
+  margin-top: 40px; /* Space between login form and demo accounts */
+  width: 100%;
+  max-width: 1000px;
+  text-align: center;
+}
+
+.demoTitle {
+  font-size: 24px;
+  color: black;
+  margin-bottom: 20px;
+}
+
+.demoBoxesContainer {
+  display: flex; /* Enable flexbox for horizontal layout */
+  justify-content: space-evenly; /* Distribute the boxes evenly */
+  flex-wrap: wrap; /* Allow the boxes to wrap to the next line if the screen is too narrow */
+  gap: 20px;
+  width: 100%; /* Ensure the container takes full width */
+}
+
+.demoBox {
+  background-color: white;
+  color: black;
+  padding: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 150px; /* Fixed width for demo boxes */
+  border: 1px solid #ccc;
+  transition: background-color 0.3s ease;
+  display: flex; /* Flexbox layout */
+  flex-direction: column; /* Arrange items vertically */
+  align-items: center; /* Center align text and image horizontally */
+  justify-content: center; /* Vertically center items in the box */
+}
+
+.demoBox:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.demoUsername {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.demoAvatar {
+  width: 100px; /* Ensure avatar images are the same size */
+  height: 100px;
+  object-fit: contain;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.demoName {
+  font-size: 14px;
+}
+
 @media (max-height: 500px) {
   .formContainer {
-    overflow-y: auto; /* Enable internal scrolling */
+    height: 270px;
+    width: 300px;
+    padding: 10px;
+  }
+  .input {
+    margin-bottom: 10px;
+  }
+  .input,
+  .button {
+    font-size: 10px;
+  }
+  .title {
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
+  .label {
+    margin-bottom: 4px;
+  }
+  .error {
+    margin-bottom: 10px;
+  }
+
+  .demoBox {
+    width: 100px; /* Further reduce width for mobile */
+    padding: 10px;
+  }
+
+  .demoAvatar {
+    width: 60px; /* Adjust avatar size for mobile */
+    height: 60px;
+  }
+
+  .demoUsername {
+    font-size: 12px; /* Smaller font size */
+  }
+
+  .demoName {
+    font-size: 10px;
   }
 }
 
@@ -91,6 +189,24 @@
   .error {
     margin-bottom: 15px;
   }
+
+  .demoBox {
+    width: 120px; /* Reduce the width of demo boxes on tablets */
+    padding: 12px; /* Reduce padding */
+  }
+
+  .demoAvatar {
+    width: 80px; /* Adjust avatar size */
+    height: 80px;
+  }
+
+  .demoUsername {
+    font-size: 14px; /* Smaller font size */
+  }
+
+  .demoName {
+    font-size: 12px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -115,5 +231,22 @@
   }
   .error {
     margin-bottom: 10px;
+  }
+  .demoBox {
+    width: 100px; /* Further reduce width for mobile */
+    padding: 10px;
+  }
+
+  .demoAvatar {
+    width: 60px; /* Adjust avatar size for mobile */
+    height: 60px;
+  }
+
+  .demoUsername {
+    font-size: 12px; /* Smaller font size */
+  }
+
+  .demoName {
+    font-size: 10px;
   }
 }
