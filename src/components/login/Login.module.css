@@ -2,6 +2,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   height: 100vh;
   padding: 20px;
 }
@@ -59,6 +60,64 @@
 .error {
   color: red;
   margin-bottom: 20px;
+}
+
+.demoContainer {
+  margin-top: 40px; /* Space between login form and demo accounts */
+  width: 100%;
+  max-width: 1000px;
+  text-align: center;
+}
+
+.demoTitle {
+  font-size: 24px;
+  color: black;
+  margin-bottom: 20px;
+}
+
+.demoBoxesContainer {
+  display: flex; /* Enable flexbox for horizontal layout */
+  justify-content: space-evenly; /* Distribute the boxes evenly */
+  flex-wrap: wrap; /* Allow the boxes to wrap to the next line if the screen is too narrow */
+  gap: 20px;
+  width: 100%; /* Ensure the container takes full width */
+}
+
+.demoBox {
+  background-color: white;
+  color: black;
+  padding: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 150px; /* Fixed width for demo boxes */
+  border: 1px solid #ccc;
+  transition: background-color 0.3s ease;
+  display: flex; /* Flexbox layout */
+  flex-direction: column; /* Arrange items vertically */
+  align-items: center; /* Center align text and image horizontally */
+  justify-content: center; /* Vertically center items in the box */
+}
+
+.demoBox:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.demoUsername {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.demoAvatar {
+  width: 100px; /* Ensure avatar images are the same size */
+  height: 100px;
+  object-fit: contain;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.demoName {
+  font-size: 14px;
 }
 
 @media (max-height: 500px) {

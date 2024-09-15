@@ -118,22 +118,27 @@ const LoginPage = () => {
         </form>
       </div>
       <div className={styles.demoContainer}>
-        <h3 className={styles.demoTitle}>Demo Accounts</h3>
-        {demoAccounts.map((demoUser) => (
-          <div
-            key={demoUser.username}
-            className={styles.demoBox}
-            onClick={handleDemoLogin(demoUser)}
-          >
-            <h4 className={styles.demoUsername}>{demoUser.username}</h4>
-            <img
-              src={demoUser.avatar_url}
-              alt={`The user avatar for the demo account with the username of ${demoUser.username}`}
-              className={styles.demoAvatar}
-            />
-            <p className={styles.demoName}>{demoUser.name}</p>
-          </div>
-        ))}
+        <h2 className={styles.demoTitle}>Demo Accounts</h2>
+        {demoLoginError && <p className={styles.error}>{demoLoginError}</p>}
+        <div className={styles.demoBoxesContainer}>
+          {demoAccounts.map((demoUser) => (
+            <div
+              key={demoUser.username}
+              className={styles.demoBox}
+              onClick={() => {
+                handleDemoLogin(demoUser);
+              }}
+            >
+              <h4 className={styles.demoUsername}>{demoUser.username}</h4>
+              <img
+                src={demoUser.avatar_url}
+                alt={`The user avatar for the demo account with the username of ${demoUser.username}`}
+                className={styles.demoAvatar}
+              />
+              <p className={styles.demoName}>{demoUser.name}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
